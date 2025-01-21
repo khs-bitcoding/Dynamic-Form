@@ -1,0 +1,44 @@
+# Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.so
+
+# Virtual environment folder (e.g. venv, .venv, env, .env)
+venv/
+.env/
+.venv/
+
+# Django migrations
+*/migrations/*
+!*/migrations/__init__.py
+
+# Database files (SQLite)
+*.sqlite3
+
+# Django secret key file
+.secret_key/
+
+# Logs
+*.log
+
+# Local settings (e.g. local development config files)
+local_settings.py
+settings_local.py
+
+# IDE/editor files (e.g. VS Code, PyCharm)
+.vscode/
+.idea/
+
+# OS-specific files (e.g. macOS, Windows)
+.DS_Store
+Thumbs.db
+
+# Static and media files (if not stored in a separate directory for deployment)
+static/
+media/
+
+# Backup files
+*.bak
+*.swp

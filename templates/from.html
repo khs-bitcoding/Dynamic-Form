@@ -1,0 +1,51 @@
+
+<section>
+    {% if form_data %}
+    <h1>{{Name}}</h1>
+    <form >
+        {% csrf_token %}
+        {% for data in form_data %}
+
+        <label for="{{data.field_name}}">{{data.field_name}}: </label>
+        {% if data.field.input_field_type == "Textarea" %}
+            <textarea 
+            id="{{data.field_name|cut:' '}}"
+            name="{{data.field_name}}_{{data.index}}" rows="3" cols="40">
+            {{data.placeholder}}
+            </textarea>
+        {% else %}
+        <input 
+            type="{{data.field.input_field_type}}"
+            id="{{data.field_name|cut:' '}}"
+            name="{{data.field_name}}_{{data.index}}"
+            placeholder="{{data.placeholder}}"
+            {% if data.is_required %} required {% endif %}
+            {% if data.min %} min="{{data.min}}" {% endif %}
+            {% if data.max %} max="{{data.max}}" {% endif %}
+            {% if data.pattern_match %} pattern="{{data.pattern_match}}" {% endif %}
+        >
+        <br>
+        {% endif %}
+                
+        {% endfor %}
+        <button onclick="verify()">Submit</button>
+    </form>
+    {% endif %}
+</section>
+
+<script>
+    function verify() {
+        data = {
+            {% for data in form_data %}"{{data.field_name|cut:' '}}": $("#{{data.field_name|cut:' '}}").val(),{% endfor %}
+        }
+        console.log(data)
+        debugger;
+        // $.ajax({
+        //     url: "",
+        //     cache: false,
+        //     success: function(html){
+        //         $("#results").append(html);
+        //     }
+        // });
+    }
+</script>
