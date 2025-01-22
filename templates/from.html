@@ -37,15 +37,15 @@
         {% endif %}
         {% if forloop.last %}<br>{% endif %}
         {% endfor %}
-        <button onclick="verify()">Submit</button>
+        <button id="{{Name|cut:' '}}_Form">Submit</button>
     </form>
     {% endif %}
 </section>
 
 <script>
-    function verify() {
+    $("#{{Name|cut:' '}}_Form").click(function (event) {
+        event.preventDefault();
         var data = { {% for data in form_data %}{% if not forloop.first %},{% endif %}"{{ data.field_name|cut:' ' }}":{% if data.field.input_field_type == "radio" or data.field.input_field_type == "checkbox" %}$("input[name='{{ data.field_name|cut:' ' }}_{{ data.index }}']:checked").map(function(){return $(this).val();}).get(){% else %}$("#{{ data.field_name|cut:' ' }}").val(){% endif %}{% endfor %} };        
         console.log(data)
-        debugger;
-    }
+    })
 </script>
