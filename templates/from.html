@@ -7,12 +7,21 @@
         {% for data in form_data %}
 
         <label for="{{data.field_name}}">{{data.field_name}}: </label>
-        {% if data.field.input_field_type == "Textarea" %}
+        {% if data.field.input_field_type == "textarea" %}
             <textarea 
             id="{{data.field_name|cut:' '}}"
             name="{{data.field_name}}_{{data.index}}" rows="3" cols="40">
             {{data.placeholder}}
             </textarea>
+        {% elif data.field.input_field_type == "radio" or data.field.input_field_type == "checkbox" %}
+            {% if data.option_value %}
+                {% for opt_val in data.option_value %}
+                    <input type="{{data.field.input_field_type}}" id="{{opt_val.val|cut:' '}}" name="{{data.field_name}}_{{data.index}}" value="{{opt_val.val}}" {% if opt_val.is_check %}checked{% endif %}>
+                    <label for="{{opt_val.val|cut:' '}}">{{opt_val.val}}</label>
+                    {% if forloop.last %}<br>{% endif %}
+                {% endfor %}    
+            {% endif %}
+        
         {% else %}
         <input 
             type="{{data.field.input_field_type}}"
@@ -26,7 +35,7 @@
         >
         <br>
         {% endif %}
-                
+        {% if forloop.last %}<br>{% endif %}
         {% endfor %}
         <button onclick="verify()">Submit</button>
     </form>
@@ -35,17 +44,8 @@
 
 <script>
     function verify() {
-        data = {
-            {% for data in form_data %}"{{data.field_name|cut:' '}}": $("#{{data.field_name|cut:' '}}").val(),{% endfor %}
-        }
+        var data = { {% for data in form_data %}{% if not forloop.first %},{% endif %}"{{ data.field_name|cut:' ' }}":{% if data.field.input_field_type == "radio" or data.field.input_field_type == "checkbox" %}$("input[name='{{ data.field_name|cut:' ' }}_{{ data.index }}']:checked").map(function(){return $(this).val();}).get(){% else %}$("#{{ data.field_name|cut:' ' }}").val(){% endif %}{% endfor %} };        
         console.log(data)
         debugger;
-        // $.ajax({
-        //     url: "",
-        //     cache: false,
-        //     success: function(html){
-        //         $("#results").append(html);
-        //     }
-        // });
     }
 </script>

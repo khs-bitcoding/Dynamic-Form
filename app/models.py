@@ -39,8 +39,9 @@ class FormFields(models.Model):
     is_required = models.BooleanField(default=False)
     pattern_match = models.CharField(max_length=255, blank=True, null=True)
     field_name = models.CharField(max_length=255)
-    placeholder = models.CharField(max_length=255, default="")    
+    placeholder = models.CharField(max_length=255, blank=True, null=True)    
     index = models.IntegerField(validators=[MinValueValidator(1)])
+    option_value = models.JSONField(blank=True, null=True, help_text="Options for radio/checkbox inputs in JSON format, Ex. [{'val': 'Cricket', 'is_check': true}, {'val': 'Badminton', 'is_check': true}, {'val': 'Racing', 'is_check': false}]")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
