@@ -40,12 +40,51 @@
         <button id="{{Name|cut:' '}}_Form">Submit</button>
     </form>
     {% endif %}
+    
 </section>
+<table id="{{Name|cut:' '}}_table" style="width:100%">
+    <thead>
+        <tr>
+            <td style="width:40%">Title</td>
+            <td style="width:30%">Link</td>
+            <td style="width:15%">Price</td>
+            <td style="width:15%">Rating</td>
+        <tr>
+    </thead>
+    <tbody id="{{Name|cut:' '}}_tbody">
+
+    </tbody>
+</table>
+
 
 <script>
     $("#{{Name|cut:' '}}_Form").click(function (event) {
         event.preventDefault();
         var data = { {% for data in form_data %}{% if not forloop.first %},{% endif %}"{{ data.field_name|cut:' ' }}":{% if data.field.input_field_type == "radio" or data.field.input_field_type == "checkbox" %}$("input[name='{{ data.field_name|cut:' ' }}_{{ data.index }}']:checked").map(function(){return $(this).val();}).get(){% else %}$("#{{ data.field_name|cut:' ' }}").val(){% endif %}{% endfor %} };        
         console.log(data)
+        $("#amazon_tbody").html("")
+        $.ajax({
+            url: 'http://127.0.0.1:8080/scrape',
+            type: 'GET',
+            data: $.param(data),
+            success: function(response) {
+                $(function() {
+                    $.each(response.products, function(i, item) {
+                        $("#amazon_tbody").append(`
+                            <tr>
+                                <td>${item.Title}</td>
+                                <td>${item.Link}</td>
+                                <td>${item.Price}</td>
+                                <td>${item.Rating}</td>
+                            <tr>
+                        `)
+                    });
+                });
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+        
     })
 </script>
